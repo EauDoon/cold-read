@@ -1,0 +1,20 @@
+{
+  "id": "B14",
+  "kind": "behavior",
+  "prompt": "Is this invoice ready to send?",
+  "context": "One numeric criterion could not be checked because no script ran.",
+  "passes_if": "The reply is the four-line report: tier, rounds, tokens, time and verdict; Changed; Your call; Not checked. An unchecked numeric criterion on paid-against arithmetic reads BLOCKED.",
+  "fails_if": "It reports a mood, omits what was not checked, or calls an unchecked invoice CLEAN.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Report in four lines",
+        "**CLEAN** (nothing open, nothing unchecked)",
+        "**PASS WITH NOTES**",
+        "an unchecked numeric criterion on paid-against arithmetic",
+        "Not checked: <each unchecked criterion and why>"
+      ]
+    }
+  ]
+}

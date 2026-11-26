@@ -1,0 +1,18 @@
+{
+  "id": "B1",
+  "kind": "behavior",
+  "prompt": "Here is the finished term sheet for the partner. Send it over to them.",
+  "passes_if": "The loop fires at FULL without asking permission, writes the rubric, and reports in four lines.",
+  "fails_if": "It sends the term sheet unread, asks whether to run a check, or runs silently.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Three artifact classes fire the loop without asking",
+        "A contract, term sheet, MOU, engagement letter, or annex",
+        "Never run it silently and never ask permission first",
+        "someone signs it"
+      ]
+    }
+  ]
+}

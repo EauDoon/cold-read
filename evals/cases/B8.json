@@ -1,0 +1,19 @@
+{
+  "id": "B8",
+  "kind": "behavior",
+  "prompt": "Two revision rounds are done and one criterion still fails. The user is away.",
+  "passes_if": "It stops. It ships with the failure named or does not ship, and never runs round three. It logs one row in a store that outlives the session and reads it back. With no store, it skips the log and says so.",
+  "fails_if": "It runs a third round, or logs only to the session directory or the assistant's built-in memory.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Two revision rounds are done. Hard cap.",
+        "Do not run round three.",
+        "One row per run in a store that outlives the session",
+        "Read the row back, and never edit an earlier row",
+        "If no store is reachable, skip the log and say so in the report"
+      ]
+    }
+  ]
+}

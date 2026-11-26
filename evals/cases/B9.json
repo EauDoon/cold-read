@@ -1,0 +1,19 @@
+{
+  "id": "B9",
+  "kind": "behavior",
+  "prompt": "Check this before I send it.",
+  "context": "The file is an amendment to a signed lease that was already reviewed in full.",
+  "passes_if": "Runs LITE, one round, with the amendment checklist as the whole rubric. The same file with 'tear it apart' runs FULL.",
+  "fails_if": "The amendment runs FULL unasked.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "An amendment to a contract that was already reviewed in full",
+        "the amendment checklist as the whole rubric",
+        "FULL only on the user's ask",
+        "FULL, overrides any label and beats DELTA"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "T2",
+  "kind": "trigger",
+  "prompt": "what is the capital gains tax rate in Germany",
+  "should_fire": false,
+  "why": "A quick lookup is an anti-trigger",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Anti-triggers, so this skill stays expensive to fire",
+        "quick lookups"
+      ]
+    }
+  ]
+}

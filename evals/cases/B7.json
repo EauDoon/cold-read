@@ -1,0 +1,18 @@
+{
+  "id": "B7",
+  "kind": "behavior",
+  "prompt": "Three evaluators read the deck. Two pass criterion 3. One fails it with a verbatim quote.",
+  "passes_if": "Criterion 3 fails. One quoted FAIL is a FAIL, and a PASS needs every evaluator.",
+  "fails_if": "It takes the majority and passes criterion 3.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Not majority vote",
+        "Any single quoted FAIL is a FAIL",
+        "PASS requires every evaluator to pass it",
+        "Default to FAIL when uncertain"
+      ]
+    }
+  ]
+}

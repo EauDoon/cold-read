@@ -1,0 +1,26 @@
+{
+  "id": "B13",
+  "kind": "behavior",
+  "prompt": "Round one fixes are in. Read it again.",
+  "passes_if": "Round two is a regression read by a fresh evaluator who does not get the finding list. The brief lens and any numeric script rerun on the whole artifact. If round two raises at least as many new FAILs as round one, the run stops and says whether the brief or the source set is wrong.",
+  "fails_if": "The same evaluator rereads with its own findings in hand, or the loop keeps iterating while new FAILs grow.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Round two is a regression read",
+        "by a fresh evaluator, without the finding list",
+        "Divergence stop.",
+        "Fix the FAILs. Only the FAILs."
+      ]
+    },
+    {
+      "type": "reference_contains_all",
+      "file": "references/loop-rules.md",
+      "phrases": [
+        "without the finding list or the before text",
+        "the brief or the source set is wrong, not the prose"
+      ]
+    }
+  ]
+}

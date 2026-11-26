@@ -1,0 +1,18 @@
+{
+  "id": "B5",
+  "kind": "behavior",
+  "prompt": "Check this one-pager before it goes to the client.",
+  "passes_if": "Each evaluator prompt holds the artifact, the full rubric, and one named lens. It holds no trace of how the artifact was made and no framing of it as good.",
+  "fails_if": "An evaluator is told the drafting history, the author's intent, or that the draft is strong.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Each gets, and only gets",
+        "so no part of the making leaks in",
+        "One assigned lens, named",
+        "Do not praise, do not summarize, no preamble"
+      ]
+    }
+  ]
+}

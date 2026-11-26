@@ -1,0 +1,15 @@
+{
+  "id": "T8",
+  "kind": "trigger",
+  "prompt": "here are my internal notes and a forecast table from the planning call",
+  "should_fire": false,
+  "why": "Internal documents do not auto-fire",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Internal documents, notes and forecast tables that stay inside do not auto-fire"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "B10",
+  "kind": "behavior",
+  "prompt": "Check this partner one-pager before it goes out.",
+  "context": "The one-pager was built from a running ledger. One figure differs from the ledger, and a leaning is stated as agreed.",
+  "passes_if": "The rubric carries the source-of-record criterion. The run fails the figure that differs from the ledger and the leaning stated as agreed, each with a quote. If the ledger is confidential, the run asks first, and the log row says confidential output plus a topic with no figure, name or claim.",
+  "fails_if": "It checks the one-pager only against itself, or the log row leaks a confidential figure.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "every figure matches the record, and nothing the record holds as a leaning or an open item is stated as decided",
+        "ask the user first, before step 1",
+        "\"confidential output\" plus a topic, with no figure, name or claim in any field"
+      ]
+    }
+  ]
+}

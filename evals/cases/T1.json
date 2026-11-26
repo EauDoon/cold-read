@@ -1,0 +1,22 @@
+{
+  "id": "T1",
+  "kind": "trigger",
+  "prompt": "check this deck before Thursday, it goes to the board",
+  "should_fire": true,
+  "why": "A finished external deck is about to leave",
+  "checks": [
+    {
+      "type": "skill_description_contains",
+      "phrases": [
+        "external decks",
+        "check this before I send it"
+      ]
+    },
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "An external deliverable: a deck, memo, or one-pager going outside"
+      ]
+    }
+  ]
+}

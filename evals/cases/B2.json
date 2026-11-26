@@ -1,0 +1,17 @@
+{
+  "id": "B2",
+  "kind": "behavior",
+  "prompt": "Rough pass on this term sheet, quick and dirty, then I send it.",
+  "passes_if": "Runs LITE: one cold reader on the full rubric, one round. The effort label lowers the tier and never switches the loop off.",
+  "fails_if": "It skips the loop because the user asked for a rough pass, or runs FULL against the label.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "an effort label never switches it off",
+        "A contract or paid-against arithmetic never goes below LITE",
+        "one cold reader on the full rubric, one round"
+      ]
+    }
+  ]
+}

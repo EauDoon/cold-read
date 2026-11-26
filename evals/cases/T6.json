@@ -1,0 +1,15 @@
+{
+  "id": "T6",
+  "kind": "trigger",
+  "prompt": "post this tweet about my weekend",
+  "should_fire": false,
+  "why": "A social post is not an auto-fire class",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "A social post is not on this list."
+      ]
+    }
+  ]
+}

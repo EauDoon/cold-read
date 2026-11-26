@@ -1,0 +1,22 @@
+{
+  "id": "B11",
+  "kind": "behavior",
+  "prompt": "I changed two paragraphs in the memo you checked last week. Check it again before I send it.",
+  "context": "The earlier run is logged, less than 14 days old, and the earlier version is retrievable.",
+  "passes_if": "Runs DELTA: the changed sections, every time-sensitive claim in the whole artifact, the brief lens on the whole artifact, and a full rerun of any numeric script. One round. The same request on a contract, after a BLOCKED verdict, or with more than a third of the artifact changed reruns at its normal tier.",
+  "fails_if": "It credits arithmetic from the earlier run, or runs DELTA on a contract.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "checks the change and credits the logged run for the rest",
+        "plus every time-sensitive claim in the whole artifact",
+        "plus the brief lens on the whole artifact",
+        "arithmetic is never credited",
+        "DELTA is never available for a contract, a term sheet or paid-against arithmetic",
+        "never after a BLOCKED verdict",
+        "more than a third of the paragraphs, rows or slides"
+      ]
+    }
+  ]
+}
