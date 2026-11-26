@@ -209,7 +209,7 @@ Not majority vote. The two directions are not symmetric.
 
 Expect singleton catches. In the 06-08-2026 proof run the sharpest finding came
 from one reader of three, and one reader passed a criterion the other two failed
-with a quote. A single evaluator is not enough.
+with a quote. On a FULL pass a single evaluator is not enough.
 
 ### 5. Revise
 

@@ -9,6 +9,7 @@
 <p>
 <a href="https://github.com/EauDoon/cold-read/actions"><img src="https://img.shields.io/github/actions/workflow/status/EauDoon/cold-read/check.yml?branch=main" alt="build"></a>
 <a href="https://github.com/EauDoon/cold-read/blob/main/LICENSE"><img src="https://img.shields.io/github/license/EauDoon/cold-read" alt="license"></a>
+<a href="https://github.com/EauDoon/cold-read"><img src="https://img.shields.io/github/last-commit/EauDoon/cold-read" alt="last commit"></a>
 </p>
 
 <p>
@@ -17,7 +18,9 @@
 <a href="#when-it-fires">When&nbsp;it&nbsp;fires</a> ·
 <a href="#the-loop">The&nbsp;loop</a> ·
 <a href="#the-report">The&nbsp;report</a> ·
-<a href="#what-it-costs">Cost</a>
+<a href="#what-it-costs">Cost</a> ·
+<a href="#what-breaks-it">What&nbsp;breaks&nbsp;it</a> ·
+<a href="#evals-and-checks">Evals</a>
 </p>
 
 </div>
@@ -46,7 +49,7 @@ For one project:
 mkdir -p your-project/.claude/skills && cp -r cold-read/.claude/skills/cold-read your-project/.claude/skills/
 ```
 
-For the Claude apps, build a zip with the skill folder at its root and upload it under Customize > Skills:
+For the Claude apps, turn on code execution, build a zip with the skill folder at its root, and upload it under Customize > Skills. The apps trigger it from its description.
 
 ```bash
 cd cold-read/.claude/skills && zip -r cold-read.zip cold-read
@@ -128,6 +131,21 @@ Measured on logged runs, each in its own unit:
 
 Right for a contract or a board deck, absurd for a tweet. Scale readers to what being wrong costs, not to how much the work matters to its author. A run checkpoints at 60 minutes or 1.2M evaluator output tokens.
 
+## What breaks it
+
+- A rubric written after the draft. It rationalizes the draft.
+- A reader that shares the author's context, or is told how the work was made or that it is good. That is self-review.
+- Scores out of ten. They collapse to 7 and mean nothing; a criterion is PASS or FAIL.
+- Majority vote. One quoted FAIL outvotes two passes, because a pass is what a reader returns when it did not look hard enough.
+- Two lenses in one brief. That is one evaluator, and the second lens loses.
+- A claimed recompute with no script. Numbers close only when the main thread runs the script itself.
+- Fixing things nobody flagged. That is a new draft, and it voids the round.
+- Handing the round-two reader the finding list. Round two is a regression read by a fresh reader.
+- A summary of the public record. A public claim is checked against the publisher's own page.
+- Reading only the visible page. Comments, speaker notes, tracked changes, hidden sheets and document properties go out with the file.
+- Round three. If criteria still fail after two rounds, ship with the failures named, or do not ship.
+- A log in the session directory or the assistant's memory. Neither is a record anyone can audit.
+
 ## Neighbours
 
 | Skill | Owns | Split |
@@ -135,17 +153,67 @@ Right for a contract or a board deck, absurd for a tweet. Scale readers to what 
 | [gauntlet-verify](https://github.com/EauDoon/gauntlet-verify) | Work in flight: a build held to a named reference, or research verified while it is drafted | In flight versus finished and shipping |
 | Your prose style guide | The prose bar | It is the bar, cold-read runs the check |
 
-## Repository
+Run one loop at a time: gauntlet-verify while the work is being made, cold-read once when it is finished and about to leave.
+
+## Evals and checks
+
+```bash
+python3 scripts/check_skill.py   # frontmatter, references, loop rules, dashes, private strings, links
+npm test                         # runner tests, removal tests, and the check script's unit tests
+npm run evals                    # 24 cases against the skill text
+```
+
+The 24 cases in [evals/](evals/README.md) are 16 behavior cases and 8 trigger cases. Each one states a prompt, what passes and what fails, so a reviewer who was not there can grade a live run. Each one also pins the sentences in the skill that it depends on, and CI fails when a pinned sentence is removed or reworded. A static pass shows the instruction is still in the skill; whether a model follows it takes a live run.
+
+All three commands run in CI on every push to `main` and every pull request. They need Python 3 and Node 18 or later, and no packages.
+
+## Maintaining the skill
+
+- Keep the description at 220 characters or fewer and lead with what the skill does, then the phrases that should fire it, then the one neighbour boundary. Skill listings have a character budget, and a skill that overflows it keeps only its name.
+- A new rule goes in the compact list in SKILL.md section 6a and, with the failure that earned it, in `references/loop-rules.md`. The check script fails when the two lists differ.
+- A new rule needs an eval case that pins it. Delete a criterion or rule that never fires across several logged runs.
+- Dates are DD-MM-YYYY. No em or en dashes anywhere; the check script rejects them.
+
+## Repo layout
+
+<details>
+<summary><b>Files and folders</b></summary>
+
+<br>
 
 ```
-.claude/skills/cold-read/SKILL.md              the skill
-.claude/skills/cold-read/references/           loop rules, with the failure behind each
-evals/evals.md                                 ten graded cases
-docs/                                          the 3D explainer page (three.js bundled, no CDN)
-scripts/check_skill.py                         frontmatter, references, house style, privacy checks
+.claude/skills/cold-read/
+├── SKILL.md              # the skill
+└── references/
+    └── loop-rules.md     # each loop rule with the failure that earned it
+.github/
+├── ISSUE_TEMPLATE/       # bug report and feature request forms
+├── PULL_REQUEST_TEMPLATE.md
+└── workflows/check.yml   # check script, unit tests, and evals on main and pull requests
+evals/
+├── README.md             # every case, with how to grade a live run
+├── cases/                # B1 to B16 behavior and T1 to T8 trigger cases as JSON
+├── runner.mjs            # npm run evals: checks each case's pinned sentences
+└── runner.test.mjs       # runner tests and the removal test for every case
+scripts/
+├── check_skill.py        # frontmatter, references, loop rules, dashes, private strings, links
+└── test_check_skill.py   # unit tests for check_skill.py
+docs/                     # the 3D explainer page (three.js bundled, no CDN)
+assets/banner.svg
+CHANGELOG.md
+LICENSE                   # CC BY 4.0
+README.md
+SECURITY.md               # how to report a flaw
+package.json              # npm test and npm run evals
 ```
 
-`python3 scripts/check_skill.py` runs in CI on every push. To view the explainer from a checkout, serve `docs/` with any static server, for example `python3 -m http.server -d docs`.
+</details>
+
+To view the explainer from a checkout, serve `docs/` with any static server, for example `python3 -m http.server -d docs`.
+
+## Credit
+
+The loop is the evaluator-optimizer workflow from [Anthropic's "Building effective agents"](https://www.anthropic.com/engineering/building-effective-agents), with the evaluator moved to a context that never saw the work being made. The repository layout and the eval harness follow [gauntlet-verify](https://github.com/EauDoon/gauntlet-verify).
 
 ## License
 

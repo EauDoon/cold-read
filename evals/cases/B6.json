@@ -1,0 +1,19 @@
+{
+  "id": "B6",
+  "kind": "behavior",
+  "prompt": "Check this fee schedule before it goes to the counterparty. An evaluator replies that it recomputed every total and they match.",
+  "passes_if": "The numeric criterion stays open until an evaluator returns a runnable script and the main thread runs it. A claimed recompute with no script is respawned once, then recorded as unchecked, which bars CLEAN.",
+  "fails_if": "It closes the numeric criterion on the evaluator's word.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "An evaluator never closes a numeric criterion by assertion",
+        "The main thread executes the script",
+        "respawn once",
+        "an unchecked criterion bars a clean verdict",
+        "arithmetic is never credited"
+      ]
+    }
+  ]
+}

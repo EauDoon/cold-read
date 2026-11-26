@@ -1,0 +1,15 @@
+{
+  "id": "T7",
+  "kind": "trigger",
+  "prompt": "schedule this post announcing the partnership figures and the launch date",
+  "should_fire": true,
+  "why": "A post announcing figures, dates, or a partner commitment is class 3 and runs LITE",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "except a post announcing figures, dates, or a partner commitment, which is class 3 and runs LITE"
+      ]
+    }
+  ]
+}

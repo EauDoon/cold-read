@@ -1,0 +1,15 @@
+{
+  "id": "T5",
+  "kind": "trigger",
+  "prompt": "help me outline the investor memo",
+  "should_fire": false,
+  "why": "No artifact exists yet",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "No artifact, no loop."
+      ]
+    }
+  ]
+}

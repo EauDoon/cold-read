@@ -1,0 +1,17 @@
+{
+  "id": "B16",
+  "kind": "behavior",
+  "prompt": "Check this memo before I send it.",
+  "context": "The agent cannot spawn subagents.",
+  "passes_if": "The cold reader is a fresh session or a different model. The protocol reads correctly with subagent replaced by either.",
+  "fails_if": "It reviews the memo in the context that wrote it and calls that a cold read.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "A cold reader is any context that never saw the making: a subagent, a fresh session, or a different model",
+        "That is self-review"
+      ]
+    }
+  ]
+}

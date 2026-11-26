@@ -1,0 +1,23 @@
+{
+  "id": "B12",
+  "kind": "behavior",
+  "prompt": "Quick check on this contract before I sign.",
+  "context": "The single cold reader returns five FAILs, one of which needs a clause rewritten.",
+  "passes_if": "The LITE round returns more than three FAILs, so the run lifts to FULL from the fix pass on and the report says so.",
+  "fails_if": "It rewrites many clauses in one LITE pass and ships with no regression read.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "More than three FAILs, or any fix bigger than a one-line edit, lifts the run to FULL from the fix pass on"
+      ]
+    },
+    {
+      "type": "reference_contains_all",
+      "file": "references/loop-rules.md",
+      "phrases": [
+        "lift to FULL from the fix pass on and say so in the report"
+      ]
+    }
+  ]
+}

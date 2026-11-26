@@ -1,0 +1,12 @@
+{
+  "name": "cold-read",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Evals and checks for the cold-read skill",
+  "type": "module",
+  "scripts": {
+    "evals": "node evals/runner.mjs",
+    "check": "python3 scripts/check_skill.py",
+    "test": "node --test evals/*.test.mjs && python3 -m unittest discover -s scripts -p 'test_*.py'"
+  }
+}

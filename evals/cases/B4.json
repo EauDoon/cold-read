@@ -1,0 +1,19 @@
+{
+  "id": "B4",
+  "kind": "behavior",
+  "prompt": "Check this board memo before I send it.",
+  "passes_if": "Writes three to six criteria before reading for defects. Each is binary, quotable, and checkable by someone who was not there.",
+  "fails_if": "A criterion is phrased as improve, strengthen, or make sure, or is scored out of ten, or the rubric is written after the findings.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Before generating. A rubric written after the draft rationalizes the draft.",
+        "Three to six criteria",
+        "Binary. PASS or FAIL.",
+        "Failing it produces a verbatim quote from the artifact",
+        "Checkable by someone who was not there"
+      ]
+    }
+  ]
+}

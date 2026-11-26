@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.1.0, 26-11-2026
+
+Brings the repository to the standard of its sibling, gauntlet-verify.
+
+Added
+
+* A runnable eval suite: 16 behavior cases and 8 trigger cases as JSON in `evals/cases/`, each pinning the sentences in the skill it depends on. `npm run evals` runs them, and `npm test` removes each pinned sentence in turn and expects its case to fail. The suite now has a DELTA case (B11), which 1.0.0 listed as open.
+* `scripts/check_skill.py` now also checks that the loop rules in SKILL.md section 6a and in `references/loop-rules.md` are the same list, that every relative link and image resolves, that SVG files carry no dashes, and that dashes written as HTML entities are caught. It has unit tests.
+* CI runs the check script, the tests and the evals on every push to `main` and every pull request.
+* Issue and pull request templates.
+* README sections: what breaks it, evals and checks, maintaining the skill, repo layout, credit.
+
+Changed
+
+* SKILL.md step 4: "A single evaluator is not enough" now reads "On a FULL pass a single evaluator is not enough". LITE runs one cold reader by design, and the two sentences contradicted each other.
+* `evals/evals.md` is replaced by `evals/README.md` and the case files. The ten original cases are all carried over.
+
 ## 1.0.0, 26-11-2026
 
 First public release.

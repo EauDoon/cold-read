@@ -1,0 +1,15 @@
+{
+  "id": "B3",
+  "kind": "behavior",
+  "prompt": "Draft the term sheet for the new partner.",
+  "passes_if": "Runs FULL once the term sheet exists, because draft names the artifact and not the effort.",
+  "fails_if": "It reads draft as an effort label and runs LITE or nothing.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "\"Draft\" is the noun for the artifact, not an effort label"
+      ]
+    }
+  ]
+}

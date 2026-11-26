@@ -1,0 +1,25 @@
+{
+  "id": "B15",
+  "kind": "behavior",
+  "prompt": "Tear this proposal apart before it goes to the client.",
+  "passes_if": "FULL. One evaluator per lens, and the brief lens runs: its evaluator gets only the verbatim request and the artifact and answers the four questions.",
+  "fails_if": "Lenses are merged into one brief, or the brief lens is skipped.",
+  "checks": [
+    {
+      "type": "skill_contains_all",
+      "phrases": [
+        "Run it on every FULL pass",
+        "gets the user's verbatim request and the artifact, nothing else",
+        "what was asked for that is absent",
+        "**One lens, one evaluator.** Never merge two lenses into one brief"
+      ]
+    },
+    {
+      "type": "reference_contains_all",
+      "file": "references/loop-rules.md",
+      "phrases": [
+        "Two lenses in one brief is one evaluator"
+      ]
+    }
+  ]
+}
