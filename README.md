@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="cold-read, a Claude skill: a blind pass on finished work before it leaves your hands. A document in a cold glass chamber is read by orbiting lenses, and one beam turns red on the flawed line." width="100%">
+<img src="assets/banner.svg" alt="cold-read, an LLM skill: a blind pass on finished work before it leaves your hands. A document in a cold glass chamber is read by orbiting lenses, and one beam turns red on the flawed line." width="100%">
 
 <h1>cold-read</h1>
 
-<p><b>A Claude skill that reads finished work blind before it leaves your hands.</b></p>
+<p><b>An LLM skill that reads finished work blind before it leaves your hands.</b></p>
 
 <p>
 <a href="https://github.com/EauDoon/cold-read/actions"><img src="https://img.shields.io/github/actions/workflow/status/EauDoon/cold-read/check.yml?branch=main" alt="build"></a>
@@ -37,17 +37,21 @@ It needs an agent that can run subagents or fresh sessions. A second model famil
 git clone https://github.com/EauDoon/cold-read
 ```
 
-For every project (personal skills):
+The skill is plain Markdown in the Agent Skills layout, and its rules are not tied to one model. The install paths below are for Claude Code and the Claude apps, one runtime among several. Every measured run in this README was on Claude models.
+
+Claude Code, every project (personal skills):
 
 ```bash
 mkdir -p ~/.claude/skills && cp -r cold-read/.claude/skills/cold-read ~/.claude/skills/
 ```
 
-For one project:
+Claude Code, one project:
 
 ```bash
 mkdir -p your-project/.claude/skills && cp -r cold-read/.claude/skills/cold-read your-project/.claude/skills/
 ```
+
+Any other agent or model: give it `.claude/skills/cold-read/SKILL.md` and `references/loop-rules.md` as instructions, and run each reader as a fresh session or on a different model. The protocol reads the same with "subagent" replaced by either.
 
 For the Claude apps, turn on code execution, download [cold-read.zip](https://github.com/EauDoon/cold-read/releases/latest/download/cold-read.zip) from the latest release, and upload it under Customize > Skills. The apps trigger it from its description. To build the zip yourself, keep the skill folder at the zip root:
 

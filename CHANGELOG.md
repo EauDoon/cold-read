@@ -17,6 +17,7 @@ Added
 Changed
 
 * SKILL.md step 4: "A single evaluator is not enough" now reads "On a FULL pass a single evaluator is not enough". LITE runs one cold reader by design, and the two sentences contradicted each other.
+* The README, the banner, the explainer page and its share image call this an LLM skill, not a Claude skill, and the Quick start names Claude Code and the Claude apps as one runtime among several, with a line for any other agent.
 * `evals/evals.md` is replaced by `evals/README.md` and the case files. The ten original cases are all carried over.
 
 ## 1.0.0, 26-11-2026
