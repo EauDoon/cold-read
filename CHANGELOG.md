@@ -11,6 +11,8 @@ Added
 * CI runs the check script, the tests and the evals on every push to `main` and every pull request.
 * Issue and pull request templates.
 * README sections: what breaks it, evals and checks, maintaining the skill, repo layout, credit.
+* Share-preview tags, a share image and an icon on the explainer page.
+* The skill attached to the release as `cold-read.zip` for the Claude apps.
 
 Changed
 

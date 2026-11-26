@@ -49,7 +49,7 @@ For one project:
 mkdir -p your-project/.claude/skills && cp -r cold-read/.claude/skills/cold-read your-project/.claude/skills/
 ```
 
-For the Claude apps, turn on code execution, build a zip with the skill folder at its root, and upload it under Customize > Skills. The apps trigger it from its description.
+For the Claude apps, turn on code execution, download [cold-read.zip](https://github.com/EauDoon/cold-read/releases/latest/download/cold-read.zip) from the latest release, and upload it under Customize > Skills. The apps trigger it from its description. To build the zip yourself, keep the skill folder at the zip root:
 
 ```bash
 cd cold-read/.claude/skills && zip -r cold-read.zip cold-read
