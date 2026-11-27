@@ -7,8 +7,8 @@ Fixed
 * Explainer page: the five lens rows stayed dimmed, and on a narrow screen their descriptions stayed hidden, when WebGL or JavaScript was not available. Only the 3D scene script lights a row, so the rows now dim only once that script runs.
 * Explainer page: the install snippet ran `cp -r` into `~/.claude/skills/` without creating it, which fails on a machine with no skills folder. It now runs `mkdir -p` first, as the README does.
 * Explainer page: the DELTA tier said only the change is read again. It now names what SKILL.md reruns: the change, time-sensitive claims, the brief lens and every numeric script.
-* `scripts/check_skill.py` reported a package version such as `serve@14.2.4` as an email address.
-* `scripts/check_skill.py` missed an em or en dash written as a script, JSON or CSS escape.
+* `scripts/check_skill.py` reported a package version such as `serve@14.2.4` as an email address. An address followed by an underscore or a hyphen, as in Markdown emphasis, is still reported.
+* `scripts/check_skill.py` missed an em or en dash written as a script, JSON or CSS escape. A backslash before a year in a path, such as `\2013\`, is not a dash.
 * `npm run evals` stopped with a stack trace and no file name when a case file was not valid JSON, or when a case named a reference file such as `constructor`. Both now print a FAIL line for that case.
 
 Added

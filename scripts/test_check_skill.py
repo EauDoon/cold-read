@@ -110,6 +110,17 @@ class CheckSkillTests(unittest.TestCase):
             self.assertEqual(check_skill.line_problems(sample), [], sample)
         self.assertEqual(len(check_skill.line_problems("someone" + "@mail.example.co.uk")), 1)
 
+    def test_email_inside_markdown_emphasis_or_before_a_suffix_fails(self):
+        address = "someone" + "@example.com"
+        for sample in (f"contact _{address}_ now", f"__{address}__", f"EMAIL={address}_old", f"mail {address}-team"):
+            self.assertEqual(len(check_skill.line_problems(sample)), 1, sample)
+
+    def test_backslash_year_paths_and_short_escapes_are_not_dashes(self):
+        for sample in ("C:\\2013\\reports", "archive\\2014\\q3.xlsx", "\\u02014"):
+            self.assertEqual(check_skill.line_problems(sample), [], sample)
+        for sample in ('content: "\\2014\\00a0"', "\\U00002014", "\\2013;"):
+            self.assertEqual(check_skill.line_problems(sample), ["an em or en dash"], sample)
+
     def test_broken_relative_link_fails(self):
         errors = run(extra={"README.md": "[rules](docs/none.md) and <img src=\"assets/none.svg\">"})
         self.assertEqual(sum("broken relative link" in e for e in errors), 2)
