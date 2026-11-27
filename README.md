@@ -163,7 +163,7 @@ Run one loop at a time: gauntlet-verify while the work is being made, cold-read 
 
 ```bash
 python3 scripts/check_skill.py   # frontmatter, references, loop rules, dashes, private strings, links
-npm test                         # runner tests, removal tests, and the check script's unit tests
+npm test                         # runner, removal and explainer page tests, and the check script's unit tests
 npm run evals                    # 24 cases against the skill text
 ```
 
@@ -198,7 +198,8 @@ evals/
 ├── README.md             # every case, with how to grade a live run
 ├── cases/                # B1 to B16 behavior and T1 to T8 trigger cases as JSON
 ├── runner.mjs            # npm run evals: checks each case's pinned sentences
-└── runner.test.mjs       # runner tests and the removal test for every case
+├── runner.test.mjs       # runner tests and the removal test for every case
+└── page.test.mjs         # static tests for the explainer page in docs/
 scripts/
 ├── check_skill.py        # frontmatter, references, loop rules, dashes, private strings, links
 └── test_check_skill.py   # unit tests for check_skill.py
