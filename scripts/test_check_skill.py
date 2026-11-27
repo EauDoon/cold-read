@@ -121,6 +121,42 @@ class CheckSkillTests(unittest.TestCase):
         for sample in ('content: "\\2014\\00a0"', "\\U00002014", "\\2013;"):
             self.assertEqual(check_skill.line_problems(sample), ["an em or en dash"], sample)
 
+    def test_css_dash_before_another_css_escape_fails_and_year_month_path_passes(self):
+        for sample in ('content: "\\2014\\a0"', 'content: "\\2009\\2013\\2009"', "'content: \"\\\\2014\\\\00a0\"'",
+                       'content: "\\2014, "', 'content: "\\2013."', 'content: "\\2014\\00a0Source"',
+                       'content: "\\2014\\a0Source"', 'content: "\\2014\\201C"', 'content: "\\2014\\0201CQuoted"',
+                       'content: "\\2014\\01F600"'):
+            self.assertEqual(check_skill.line_problems(sample), ["an em or en dash"], sample)
+        for sample in ("reports\\2014\\03\\summary.csv", "D:\\backup\\2013\\01\\jan.zip", "archive\\2014.zip",
+                       "logs\\2014-01", "logs\\2013\\0612.log", "reports\\2014\\12", "reports\\2014\\feb",
+                       '"path": "C:\\\\reports\\\\2014\\\\12"', "logs\\2014\\2014-01-05.log",
+                       "C:\\tickets\\2014\\2231", "copy D:\\orders\\2013\\2087 E:\\out"):
+            self.assertEqual(check_skill.line_problems(sample), [], sample)
+
+    def test_known_limits_of_the_css_dash_rule_are_pinned(self):
+        # These read the same as CSS, so the check reports them. The CHANGELOG states each one.
+        for sample in ("archive\\2014 next", "Copy from D:\\backup\\2014, then delete.", "fy\\2014\\2015",
+                       "plots\\2014\\A0\\poster.pdf", '"file": "D:\\\\scans\\\\2014\\\\0001.tif"'):
+            self.assertEqual(check_skill.line_problems(sample), ["an em or en dash"], sample)
+        # These read the same as a path, so the check does not report them.
+        for sample in ('content: "\\2014Source"', 'content: "\\2014-"', 'content: "\\2013\\0a"'):
+            self.assertEqual(check_skill.line_problems(sample), [], sample)
+
+    def test_long_run_of_css_dash_escapes_is_checked_in_linear_time(self):
+        # Guards the lookahead bound. CPU time, so a busy machine cannot fail it.
+        import time
+        line = "\\2014" * 10000 + "X"
+        start = time.process_time()
+        self.assertEqual(check_skill.line_problems(line), [])
+        self.assertLess(time.process_time() - start, 2.0)
+
+    def test_prerelease_package_version_is_not_an_email(self):
+        for sample in ("pkg@1.0.0-alpha.beta-1", "next@15.0.0-canary.rc-3", "tool@2.0.0.dev_1", "mod@v1.2.0-rc.next-1"):
+            self.assertEqual(check_skill.line_problems(sample), [], sample)
+        # A host is a version only when its first two labels are numbers.
+        for host in ("163.com", "24.7chat.com", "1.2go.com", "v2.0x.org", "1.2-go.com", "24.7-support.example.com"):
+            self.assertEqual(len(check_skill.line_problems("someone" + "@" + host)), 1, host)
+
     def test_broken_relative_link_fails(self):
         errors = run(extra={"README.md": "[rules](docs/none.md) and <img src=\"assets/none.svg\">"})
         self.assertEqual(sum("broken relative link" in e for e in errors), 2)
