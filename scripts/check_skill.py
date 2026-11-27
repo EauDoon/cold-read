@@ -33,10 +33,13 @@ DASH_RE = re.compile(
     r"|\\[uUxX]\{0*201[34]\}|\\[uUxX](?:0000)?201[34]"
     # A CSS escape reads the same as a year folder in a Windows path, so it counts only where CSS
     # ends it: at the end of the line, before a space, a quote, ; < ), before sentence punctuation
-    # that ends the string, or before another escape that a path does not hold (a no-break space or
-    # a code padded to four digits). Escapes of the U+2000 block may come between.
-    r"""|\\0{0,2}201[34](?=(?:\\{1,2}0{0,2}2[0-9A-Fa-f]{3}\s?){0,16}"""
-    r"""(?:$|[\s"';<)]|[.,:!?](?:$|[\s"'])|\\{1,2}(?:0{0,4}[Aa]0(?![0-9A-Fa-f])|00[0-9A-Fa-f]{2})))"""
+    # that a space, a quote or the end of the line follows, or before another escape that a path
+    # rarely holds: a no-break space (a0), a code padded with two zeros, or a zero and four or five
+    # more hex digits. Up to 16 General Punctuation escapes (U+2000 to U+206F) may come between;
+    # the bound keeps the match linear.
+    r"""|\\0{0,2}201[34](?=(?:\\{1,2}0{0,2}20[0-6][0-9A-Fa-f]\s?){0,16}"""
+    r"""(?:$|[\s"';<)]|[.,:!?](?:$|[\s"'])"""
+    r"""|\\{1,2}(?:0{0,4}[Aa]0(?![0-9A-Fa-f])|00[0-9A-Fa-f]{2}|0[0-9A-Fa-f]{4,5}(?![0-9A-Fa-f]))))"""
 )
 PRIVATE = [
     (re.compile(r"[A-Za-z]:\\Users\\"), "a Windows user path"),
@@ -44,9 +47,9 @@ PRIVATE = [
     (re.compile(r"/Users/[\w.-]+"), "a macOS user path"),
     (re.compile(r"/home/[\w.-]+"), "a Linux home path"),
     (re.compile(r"collection://[0-9a-f-]{8,}"), "a workspace database id"),
-    # The last label must be letters and the host must not open with two numeric labels (a leading v
-    # is allowed), so a package version such as serve@14.2.4 or pkg@1.0.0-rc.next-1 does not match.
-    (re.compile(r"[\w.+-]+@(?!v?\d+\.\d+(?![0-9A-Za-z_]))[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![A-Za-z0-9])"), "an email address"),
+    # The last label must be letters and the host must not open with two whole numeric labels (a
+    # leading v is allowed), so a version such as serve@14.2.4 or pkg@1.0.0-rc.next-1 does not match.
+    (re.compile(r"[\w.+-]+@(?!v?[0-9]+\.[0-9]+(?![\w-]))[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![A-Za-z0-9])"), "an email address"),
 ]
 ALLOWED_EMAILS = {"noreply@anthropic.com"}
 
