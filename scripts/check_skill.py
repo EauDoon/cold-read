@@ -31,9 +31,12 @@ EM, EN = chr(0x2014), chr(0x2013)
 DASH_RE = re.compile(
     f"{EM}|{EN}|&mdash;|&ndash;|&#0*821[12];|&#[xX]0*201[34];"
     r"|\\[uUxX]\{0*201[34]\}|\\[uUxX](?:0000)?201[34]"
-    # A CSS escape counts only where it ends as CSS does: after any further hex escapes, at the end of
-    # the line, before a space, a quote, ; < ) or before sentence punctuation that ends the string.
-    r"""|\\0{0,2}201[34](?=(?:\\{1,2}[0-9A-Fa-f]{1,6}\s?)*(?:$|[\s"';<)]|[.,:!?](?:$|[\s"'])))"""
+    # A CSS escape reads the same as a year folder in a Windows path, so it counts only where CSS
+    # ends it: at the end of the line, before a space, a quote, ; < ), before sentence punctuation
+    # that ends the string, or before another escape that a path does not hold (a no-break space or
+    # a code padded to four digits). Escapes of the U+2000 block may come between.
+    r"""|\\0{0,2}201[34](?=(?:\\{1,2}0{0,2}2[0-9A-Fa-f]{3}\s?){0,16}"""
+    r"""(?:$|[\s"';<)]|[.,:!?](?:$|[\s"'])|\\{1,2}(?:0{0,4}[Aa]0(?![0-9A-Fa-f])|00[0-9A-Fa-f]{2})))"""
 )
 PRIVATE = [
     (re.compile(r"[A-Za-z]:\\Users\\"), "a Windows user path"),

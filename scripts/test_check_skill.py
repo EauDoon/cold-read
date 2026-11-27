@@ -123,11 +123,20 @@ class CheckSkillTests(unittest.TestCase):
 
     def test_css_dash_before_another_css_escape_fails_and_year_month_path_passes(self):
         for sample in ('content: "\\2014\\a0"', 'content: "\\2009\\2013\\2009"', "'content: \"\\\\2014\\\\00a0\"'",
-                       'content: "\\2014, "', 'content: "\\2013."'):
+                       'content: "\\2014, "', 'content: "\\2013."', 'content: "\\2014\\00a0Source"',
+                       'content: "\\2014\\a0Source"', 'content: "\\2014\\201C"'):
             self.assertEqual(check_skill.line_problems(sample), ["an em or en dash"], sample)
         for sample in ("reports\\2014\\03\\summary.csv", "D:\\backup\\2013\\01\\jan.zip", "archive\\2014.zip",
-                       "logs\\2014-01", "logs\\2013\\0612.log"):
+                       "logs\\2014-01", "logs\\2013\\0612.log", "reports\\2014\\12", "reports\\2014\\feb",
+                       '"path": "C:\\\\reports\\\\2014\\\\12"', "logs\\2014\\2014-01-05.log"):
             self.assertEqual(check_skill.line_problems(sample), [], sample)
+
+    def test_long_run_of_css_dash_escapes_is_checked_in_linear_time(self):
+        import time
+        line = "\\2014" * 10000 + "X"
+        start = time.perf_counter()
+        self.assertEqual(check_skill.line_problems(line), [])
+        self.assertLess(time.perf_counter() - start, 2.0)
 
     def test_prerelease_package_version_is_not_an_email(self):
         for sample in ("pkg@1.0.0-alpha.beta-1", "next@15.0.0-canary.rc-3", "tool@2.0.0.dev_1", "mod@v1.2.0-rc.next-1"):
