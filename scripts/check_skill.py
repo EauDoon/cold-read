@@ -44,9 +44,9 @@ PRIVATE = [
     (re.compile(r"/Users/[\w.-]+"), "a macOS user path"),
     (re.compile(r"/home/[\w.-]+"), "a Linux home path"),
     (re.compile(r"collection://[0-9a-f-]{8,}"), "a workspace database id"),
-    # The last label must be letters and the host must not open with two numeric labels, so a package
-    # version such as serve@14.2.4 or pkg@1.0.0-rc.next-1 does not match.
-    (re.compile(r"[\w.+-]+@(?!v?\d+\.\d+)[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![A-Za-z0-9])"), "an email address"),
+    # The last label must be letters and the host must not open with two numeric labels (a leading v
+    # is allowed), so a package version such as serve@14.2.4 or pkg@1.0.0-rc.next-1 does not match.
+    (re.compile(r"[\w.+-]+@(?!v?\d+\.\d+(?![0-9A-Za-z_]))[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![A-Za-z0-9])"), "an email address"),
 ]
 ALLOWED_EMAILS = {"noreply@anthropic.com"}
 

@@ -141,7 +141,9 @@ class CheckSkillTests(unittest.TestCase):
     def test_prerelease_package_version_is_not_an_email(self):
         for sample in ("pkg@1.0.0-alpha.beta-1", "next@15.0.0-canary.rc-3", "tool@2.0.0.dev_1", "mod@v1.2.0-rc.next-1"):
             self.assertEqual(check_skill.line_problems(sample), [], sample)
-        self.assertEqual(len(check_skill.line_problems("someone" + "@163.com")), 1)
+        # A host is a version only when its first two labels are numbers.
+        for host in ("163.com", "24.7chat.com", "1.2go.com", "v2.0x.org"):
+            self.assertEqual(len(check_skill.line_problems("someone" + "@" + host)), 1, host)
 
     def test_broken_relative_link_fails(self):
         errors = run(extra={"README.md": "[rules](docs/none.md) and <img src=\"assets/none.svg\">"})
