@@ -3,7 +3,9 @@
 // so a green suite cannot survive a deleted instruction.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCases, loadSkill, normalize, runCase, skillFromText, validateCase } from "./runner.mjs";
 
@@ -95,4 +97,27 @@ test("description checks read the description, not the body", () => {
   const skill = skillFromText("---\nname: \"x\"\ndescription: 'A blind pass.'\n---\nterm sheets\n");
   const data = { id: "Z6", kind: "trigger", prompt: "x", should_fire: true, why: "y", checks: [{ type: "skill_description_contains", phrases: ["term sheets"] }] };
   assert.equal(runCase(data, skill).ok, false);
+});
+
+test("a case file that is not valid JSON is reported by name, not thrown", () => {
+  const dir = mkdtempSync(join(tmpdir(), "cold-read-cases-"));
+  try {
+    writeFileSync(join(dir, "B1.json"), '{"id":"B1","kind":"behavior",}');
+    const loaded = loadCases(dir);
+    assert.equal(loaded.length, 1);
+    assert.equal(loaded[0].file, "B1.json");
+    assert.equal(loaded[0].data, null);
+    assert.match(loaded[0].error, /not valid JSON/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("a reference file named after an object property is reported as missing", () => {
+  for (const file of ["constructor", "toString", "__proto__"]) {
+    const data = { ...CASES[0].data, checks: [{ type: "reference_contains_all", file, phrases: ["x"] }] };
+    const result = runCase(data, SKILL);
+    assert.equal(result.ok, false);
+    assert.deepEqual(result.problems, [`${file} does not exist in the skill folder`]);
+  }
 });

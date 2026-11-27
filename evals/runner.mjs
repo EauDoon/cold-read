@@ -50,7 +50,14 @@ export function loadCases(dir = CASES_DIR) {
   return readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .sort((a, b) => a.localeCompare(b, "en", { numeric: true }))
-    .map((f) => ({ file: f, data: JSON.parse(readFileSync(join(dir, f), "utf8")) }));
+    .map((f) => {
+      // A file that does not parse is a failing case named by its file, not a crash.
+      try {
+        return { file: f, data: JSON.parse(readFileSync(join(dir, f), "utf8")) };
+      } catch (e) {
+        return { file: f, data: null, error: `not valid JSON: ${e.message}` };
+      }
+    });
 }
 
 const isText = (v) => typeof v === "string" && v.trim() !== "";
@@ -104,9 +111,9 @@ export function runCase(data, skill) {
       haystack = skill.description;
       where = "the description";
     } else {
-      haystack = skill.references[check.file];
+      haystack = Object.hasOwn(skill.references, check.file) ? skill.references[check.file] : undefined;
       where = check.file;
-      if (haystack === undefined) {
+      if (typeof haystack !== "string") {
         problems.push(`${check.file} does not exist in the skill folder`);
         continue;
       }
@@ -123,8 +130,8 @@ export function main() {
   const cases = loadCases();
   let failed = 0;
   const seen = new Set();
-  for (const { file, data } of cases) {
-    const result = runCase(data, skill);
+  for (const { file, data, error } of cases) {
+    const result = error ? { ok: false, problems: [error] } : runCase(data, skill);
     if (data && seen.has(data.id)) {
       result.ok = false;
       result.problems.push(`duplicate id ${data.id}`);

@@ -89,6 +89,11 @@ class CheckSkillTests(unittest.TestCase):
             self.assertEqual(check_skill.line_problems(f"a {dash} b"), ["an em or en dash"])
         self.assertEqual(check_skill.line_problems("a - b, 3 to 5, well-formed"), [])
 
+    def test_dashes_fail_as_script_and_style_escapes(self):
+        for dash in ("\\u2014", "\\u2013", "\\u{2014}", "\\x{2013}", "\\2014 ", "\\002013"):
+            self.assertEqual(check_skill.line_problems(f'a "{dash}" b'), ["an em or en dash"], dash)
+        self.assertEqual(check_skill.line_problems("12014 and u2014 and \\u2015"), [])
+
     def test_dash_in_svg_fails(self):
         errors = run(extra={"assets/banner.svg": f"<svg><text>a {chr(0x2014)} b</text></svg>"})
         self.assertTrue(any("assets/banner.svg:1" in e for e in errors))
@@ -99,6 +104,11 @@ class CheckSkillTests(unittest.TestCase):
         for sample in samples:
             self.assertEqual(len(check_skill.line_problems(sample)), 1, sample)
         self.assertEqual(check_skill.line_problems("Co-Authored-By: Claude <noreply@anthropic.com>"), [])
+
+    def test_package_versions_are_not_email_addresses(self):
+        for sample in ("npx serve@14.2.4 docs", "uses: actions/checkout@v7", "three@0.160.0"):
+            self.assertEqual(check_skill.line_problems(sample), [], sample)
+        self.assertEqual(len(check_skill.line_problems("someone" + "@mail.example.co.uk")), 1)
 
     def test_broken_relative_link_fails(self):
         errors = run(extra={"README.md": "[rules](docs/none.md) and <img src=\"assets/none.svg\">"})

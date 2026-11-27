@@ -7,7 +7,8 @@ Exit code 0 means every check passed.
    single-quoted line inside the listing limit.
 2. Every reference file SKILL.md names exists, and the compact loop rules in
    SKILL.md and the full rules in references/loop-rules.md list the same rules.
-3. House style: no em or en dashes, as characters or as HTML entities.
+3. House style: no em or en dashes, as characters, HTML entities, or script
+   and style escapes.
 4. Nothing private: no local paths, email addresses or workspace database ids.
 5. Every relative link and image in a Markdown or HTML file resolves.
 """
@@ -25,14 +26,20 @@ SKIP_DIRS = {".git", "node_modules", "vendor", "__pycache__"}
 PATTERN_FILES = {"scripts/check_skill.py", "scripts/test_check_skill.py"}
 
 EM, EN = chr(0x2014), chr(0x2013)
-DASH_RE = re.compile(f"{EM}|{EN}|&mdash;|&ndash;|&#0*821[12];|&#[xX]0*201[34];")
+# A dash is also caught when written as an HTML entity, as a script or JSON
+# escape (backslash u or x), or as a CSS escape (backslash and the hex code).
+DASH_RE = re.compile(
+    f"{EM}|{EN}|&mdash;|&ndash;|&#0*821[12];|&#[xX]0*201[34];"
+    r"|\\[uUxX]\{?0*201[34]\}?|\\0{0,2}201[34](?![0-9A-Fa-f])"
+)
 PRIVATE = [
     (re.compile(r"[A-Za-z]:\\Users\\"), "a Windows user path"),
     (re.compile(r"/mnt/[\w-]+"), "a mounted folder path"),
     (re.compile(r"/Users/[\w.-]+"), "a macOS user path"),
     (re.compile(r"/home/[\w.-]+"), "a Linux home path"),
     (re.compile(r"collection://[0-9a-f-]{8,}"), "a workspace database id"),
-    (re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+"), "an email address"),
+    # The last label must be letters, so a package version such as serve@14.2.4 does not match.
+    (re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![\w-])"), "an email address"),
 ]
 ALLOWED_EMAILS = {"noreply@anthropic.com"}
 
