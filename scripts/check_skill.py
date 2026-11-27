@@ -31,7 +31,9 @@ EM, EN = chr(0x2014), chr(0x2013)
 DASH_RE = re.compile(
     f"{EM}|{EN}|&mdash;|&ndash;|&#0*821[12];|&#[xX]0*201[34];"
     r"|\\[uUxX]\{0*201[34]\}|\\[uUxX](?:0000)?201[34]"
-    r"""|\\0{0,2}201[34](?=$|[\s"';<)]|\\0)"""
+    # A CSS escape counts only where it ends as CSS does: after any further hex escapes, at the end of
+    # the line, before a space, a quote, ; < ) or before sentence punctuation that ends the string.
+    r"""|\\0{0,2}201[34](?=(?:\\{1,2}[0-9A-Fa-f]{1,6}\s?)*(?:$|[\s"';<)]|[.,:!?](?:$|[\s"'])))"""
 )
 PRIVATE = [
     (re.compile(r"[A-Za-z]:\\Users\\"), "a Windows user path"),
@@ -39,8 +41,9 @@ PRIVATE = [
     (re.compile(r"/Users/[\w.-]+"), "a macOS user path"),
     (re.compile(r"/home/[\w.-]+"), "a Linux home path"),
     (re.compile(r"collection://[0-9a-f-]{8,}"), "a workspace database id"),
-    # The last label must be letters, so a package version such as serve@14.2.4 does not match.
-    (re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![A-Za-z0-9])"), "an email address"),
+    # The last label must be letters and the host must not open with two numeric labels, so a package
+    # version such as serve@14.2.4 or pkg@1.0.0-rc.next-1 does not match.
+    (re.compile(r"[\w.+-]+@(?!v?\d+\.\d+)[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![A-Za-z0-9])"), "an email address"),
 ]
 ALLOWED_EMAILS = {"noreply@anthropic.com"}
 

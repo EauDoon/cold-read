@@ -121,6 +121,19 @@ class CheckSkillTests(unittest.TestCase):
         for sample in ('content: "\\2014\\00a0"', "\\U00002014", "\\2013;"):
             self.assertEqual(check_skill.line_problems(sample), ["an em or en dash"], sample)
 
+    def test_css_dash_before_another_css_escape_fails_and_year_month_path_passes(self):
+        for sample in ('content: "\\2014\\a0"', 'content: "\\2009\\2013\\2009"', "'content: \"\\\\2014\\\\00a0\"'",
+                       'content: "\\2014, "', 'content: "\\2013."'):
+            self.assertEqual(check_skill.line_problems(sample), ["an em or en dash"], sample)
+        for sample in ("reports\\2014\\03\\summary.csv", "D:\\backup\\2013\\01\\jan.zip", "archive\\2014.zip",
+                       "logs\\2014-01", "logs\\2013\\0612.log"):
+            self.assertEqual(check_skill.line_problems(sample), [], sample)
+
+    def test_prerelease_package_version_is_not_an_email(self):
+        for sample in ("pkg@1.0.0-alpha.beta-1", "next@15.0.0-canary.rc-3", "tool@2.0.0.dev_1", "mod@v1.2.0-rc.next-1"):
+            self.assertEqual(check_skill.line_problems(sample), [], sample)
+        self.assertEqual(len(check_skill.line_problems("someone" + "@163.com")), 1)
+
     def test_broken_relative_link_fails(self):
         errors = run(extra={"README.md": "[rules](docs/none.md) and <img src=\"assets/none.svg\">"})
         self.assertEqual(sum("broken relative link" in e for e in errors), 2)
