@@ -30,7 +30,8 @@ EM, EN = chr(0x2014), chr(0x2013)
 # escape (backslash u or x), or as a CSS escape (backslash and the hex code).
 DASH_RE = re.compile(
     f"{EM}|{EN}|&mdash;|&ndash;|&#0*821[12];|&#[xX]0*201[34];"
-    r"|\\[uUxX]\{?0*201[34]\}?|\\0{0,2}201[34](?![0-9A-Fa-f])"
+    r"|\\[uUxX]\{0*201[34]\}|\\[uUxX](?:0000)?201[34]"
+    r"""|\\0{0,2}201[34](?=$|[\s"';<)]|\\0)"""
 )
 PRIVATE = [
     (re.compile(r"[A-Za-z]:\\Users\\"), "a Windows user path"),
@@ -39,7 +40,7 @@ PRIVATE = [
     (re.compile(r"/home/[\w.-]+"), "a Linux home path"),
     (re.compile(r"collection://[0-9a-f-]{8,}"), "a workspace database id"),
     # The last label must be letters, so a package version such as serve@14.2.4 does not match.
-    (re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![\w-])"), "an email address"),
+    (re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}(?![A-Za-z0-9])"), "an email address"),
 ]
 ALLOWED_EMAILS = {"noreply@anthropic.com"}
 
